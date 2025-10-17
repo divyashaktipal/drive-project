@@ -59,16 +59,16 @@ router.post(
       });
     }
     const { username, password } = req.body;
-
-    const user = await userModel.findOne({
-      username: username,
-    });
+    // normalize username to match schema's lowercase option
+    const normalizedUsername = username.toLowerCase();
+    const user = await userModel.findOne({ username: normalizedUsername });
     if (!user) {
       return res.status(400).json({
         message: "username or password is incorrect",
       });
     }
-
+    console.log(username, password);
+    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({
@@ -85,12 +85,9 @@ router.post(
       },
       process.env.JWT_SECRET
     );
-
-    res.json({
-      token,
-    });
-    // res.cookie("token", token);
-    // res.send("Logged In ");
+    // set cookie first, then send JSON response
+    res.cookie("token", token, { httpOnly: true });
+    return res.json({ token });
   }
 );
 

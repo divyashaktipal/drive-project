@@ -6,4 +6,7 @@
 
 --> Cookies are used to save the token & session management. You can use it through package called 'npm i cookie-parser'.
 
---> 
+--> npm i firebase-admin 
+
+--> multer multer-firebase-storage
+
